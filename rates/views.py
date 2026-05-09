@@ -8,16 +8,25 @@ from django.utils import timezone
 from datetime import timedelta
 
 from rates.models import GoldSilverRate
-from rates.services import get_latest_rate
+from rates.services import fetch_and_save_rates, get_latest_rate
 from core.models import UserAlert
 from notifications.models import NotificationHistory
 from rates.ai_prediction import predict_future_price
 from rates.reports import generate_rate_pdf
 from django.http import HttpResponse
 
+def _ensure_fresh_rates():
+    """Trigger a fetch if the latest price is older than 60 seconds."""
+    latest = get_latest_rate('gold')
+    if not latest or (timezone.now() - latest.timestamp).total_seconds() > 60:
+        try:
+            fetch_and_save_rates()
+        except Exception:
+            pass
 
 @login_required
 def dashboard(request):
+    _ensure_fresh_rates()
     gold = get_latest_rate('gold')
     silver = get_latest_rate('silver')
     active_alerts = UserAlert.objects.filter(user=request.user, is_active=True).count()
@@ -41,6 +50,7 @@ def dashboard(request):
 @login_required
 def api_current_rates(request):
     """Return latest gold + silver rates as JSON."""
+    _ensure_fresh_rates()
     gold = get_latest_rate('gold')
     silver = get_latest_rate('silver')
 
