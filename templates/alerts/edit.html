@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Edit Alert{% endblock %}
+{% block page_title %}Edit Alert{% endblock %}
+{% block content %}
+<div class="content-section">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="glass-card p-4">
+        <h5 class="section-heading mb-4"><i class="bi bi-pencil me-2 gold-text"></i>Edit Alert</h5>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label">Metal</label>
+            <div class="metal-select-grid">
+              <label class="metal-radio {% if alert.metal == 'gold' %}selected{% endif %}">
+                <input type="radio" name="metal" value="gold" {% if alert.metal == 'gold' %}checked{% endif %}> 🥇 Gold
+              </label>
+              <label class="metal-radio {% if alert.metal == 'silver' %}selected{% endif %}">
+                <input type="radio" name="metal" value="silver" {% if alert.metal == 'silver' %}checked{% endif %}> 🥈 Silver
+              </label>
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">Condition</label>
+            <div class="condition-select-grid">
+              <label class="condition-radio condition-up {% if alert.condition == 'increase' %}selected{% endif %}">
+                <input type="radio" name="condition" value="increase" {% if alert.condition == 'increase' %}checked{% endif %}>
+                <i class="bi bi-arrow-up-circle-fill"></i> Price Increases By
+              </label>
+              <label class="condition-radio condition-down {% if alert.condition == 'decrease' %}selected{% endif %}">
+                <input type="radio" name="condition" value="decrease" {% if alert.condition == 'decrease' %}checked{% endif %}>
+                <i class="bi bi-arrow-down-circle-fill"></i> Price Decreases By
+              </label>
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">Threshold (%)</label>
+            <div class="pct-input-wrap">
+              <input type="number" name="percentage_threshold" id="pctInput"
+                class="form-control dark-input pct-input" step="0.01" min="0.01" max="100"
+                value="{{ alert.percentage_threshold }}" required>
+              <span class="pct-symbol">%</span>
+            </div>
+          </div>
+          <div class="form-group mb-4">
+            <label class="form-label">Note</label>
+            <input type="text" name="note" class="form-control dark-input" value="{{ alert.note }}">
+          </div>
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn-primary-gold"><i class="bi bi-check2 me-2"></i>Save Changes</button>
+            <a href="{% url 'alert_list' %}" class="btn-outline-gold">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

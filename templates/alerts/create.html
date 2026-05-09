@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Create Alert{% endblock %}
+{% block page_title %}Create Alert{% endblock %}
+{% block content %}
+<div class="content-section">
+  <div class="glass-card p-4" style="max-width: 600px; margin: 0 auto;">
+    <h5 class="section-heading mb-4"><i class="bi bi-bell me-2"></i>New Price Alert</h5>
+    
+    <div class="mb-4 p-3 rounded" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+      <h6 class="text-muted mb-2">Current Global Market Rates</h6>
+      <div class="d-flex justify-content-between">
+        <div>
+          <span class="gold-text"><i class="bi bi-circle-fill me-1"></i>Gold:</span>
+          <strong>${{ gold_rate.price_usd|default:2300|floatformat:2 }}/oz</strong>
+        </div>
+        <div>
+          <span class="silver-text"><i class="bi bi-circle-fill me-1"></i>Silver:</span>
+          <strong>${{ silver_rate.price_usd|default:28|floatformat:2 }}/oz</strong>
+        </div>
+      </div>
+    </div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="mt-4">
+        <button type="submit" class="btn-primary-gold w-100"><i class="bi bi-save me-2"></i>Save Alert</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

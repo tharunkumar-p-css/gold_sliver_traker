@@ -1,0 +1,12 @@
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #333; padding: 20px; background-color: #0d1321; color: #fff; border-radius: 8px;">
+  <h2 style="color: #FFD700; text-align: center;">GoldTracker Alert</h2>
+  <p>Hello {{ user.first_name }},</p>
+  <p>Your target for <strong>{{ alert.get_metal_display }}</strong> has been reached!</p>
+  <div style="background-color: #1a233a; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <p style="margin: 5px 0;"><strong>💹 Price Now:</strong> ${{ current_price|floatformat:2 }}/oz</p>
+    <p style="margin: 5px 0;"><strong>📍 Price at Start:</strong> ${{ previous_price|floatformat:2 }}/oz</p>
+    <p style="margin: 5px 0;"><strong>📈 Total Change:</strong> {{ pct_change|floatformat:2 }}%</p>
+  </div>
+  <p style="font-size: 13px; color: #888;">Note: Your alert base price has been reset to the current price. You will be notified again if it moves another {{ alert.percentage_threshold }}% from this level.</p>
+  <p>Login to your dashboard to view the latest charts.</p>
+</div>

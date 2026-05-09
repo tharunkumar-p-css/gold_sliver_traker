@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}My Alerts{% endblock %}
+{% block page_title %}My Alerts{% endblock %}
+{% block content %}
+<div class="content-section">
+  <div class="glass-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="section-heading mb-0">Active Price Alerts</h5>
+      <a href="{% url 'alert_create' %}" class="btn-primary-gold"><i class="bi bi-plus-circle me-1"></i>New Alert</a>
+    </div>
+    {% if alerts %}
+    <div class="table-responsive">
+      <table class="dark-table">
+        <thead>
+          <tr>
+            <th>Metal</th>
+            <th>Condition</th>
+            <th>Threshold</th>
+            <th>Base Price</th>
+            <th>Triggered</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for alert in alerts %}
+          <tr>
+            <td>
+              {% if alert.metal == 'gold' %}
+                <span class="metal-badge metal-gold">GOLD</span>
+              {% else %}
+                <span class="metal-badge metal-silver">SILVER</span>
+              {% endif %}
+            </td>
+            <td class="text-capitalize">{{ alert.condition }}</td>
+            <td class="fw-bold">{{ alert.percentage_threshold }}%</td>
+            <td class="text-muted">${{ alert.base_price|floatformat:2 }}/oz</td>
+            <td>{{ alert.trigger_count }} times</td>
+            <td>
+              <div class="d-flex gap-2">
+                <a href="{% url 'alert_edit' alert.id %}" class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></a>
+                <form method="post" action="{% url 'alert_delete' alert.id %}" onsubmit="return confirm('Delete this alert?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="bi bi-bell-slash"></i>
+      <p>No active alerts. Add one to start monitoring prices.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
