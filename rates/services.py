@@ -115,6 +115,7 @@ def fetch_and_save_rates() -> dict:
     Fetches prices, persists, returns summary dict in USD/oz.
     """
     inr_rate = _get_usd_inr_rate()
+    raw = {}
     
     api_key = getattr(settings, 'GOLDAPI_KEY', '')
     if api_key:
