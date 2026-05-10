@@ -16,11 +16,13 @@ from rates.reports import generate_rate_pdf
 from django.http import HttpResponse
 
 def _ensure_fresh_rates():
-    """Trigger a fetch if the latest price is older than 60 seconds."""
+    """Trigger a fetch and check alerts if the latest price is older than 60 seconds."""
+    from scheduler.tasks import check_alerts
     latest = get_latest_rate('gold')
     if not latest or (timezone.now() - latest.timestamp).total_seconds() > 60:
         try:
-            fetch_and_save_rates()
+            # This will fetch prices AND send emails/alerts
+            check_alerts()
         except Exception:
             pass
 
