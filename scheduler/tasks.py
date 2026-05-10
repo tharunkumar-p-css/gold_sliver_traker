@@ -12,6 +12,7 @@ Workflow per tick:
 import logging
 from django.utils import timezone
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from django.conf import settings
 
@@ -128,3 +129,21 @@ def start_scheduler():
     )
     _scheduler.start()
     logger.info(f"✅ Scheduler started — interval={interval}s")
+
+
+def run_scheduler_blocking():
+    """Start APScheduler in blocking mode (for management commands)."""
+    interval = getattr(settings, 'PRICE_CHECK_INTERVAL_SECONDS', 60)
+    scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
+    scheduler.add_job(
+        check_alerts,
+        trigger=IntervalTrigger(seconds=interval),
+        id='price_check',
+        replace_existing=True,
+        misfire_grace_time=30,
+    )
+    logger.info(f"🚀 Starting BlockingScheduler (interval={interval}s)...")
+    try:
+        scheduler.start()
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("👋 Scheduler stopped.")

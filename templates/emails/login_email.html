@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e1e1e1; border-radius: 12px; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { padding: 20px; }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 20px; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome Back! 👋</h1>
+        </div>
+        <div class="content">
+            <p>Hi {{ user.first_name|default:user.username }},</p>
+            <p>We're glad to see you again! You've successfully logged into your <strong>GoldTracker</strong> account.</p>
+            <p>Your price alerts are active and we are monitoring the markets for you every 60 seconds.</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="http://goldsilvertracker.pythonanywhere.com/dashboard/" class="button">Go to Dashboard</a>
+            </div>
+            <p>If this wasn't you, please secure your account immediately.</p>
+            <p>Stay sharp,<br>The GoldTracker Team</p>
+        </div>
+        <div class="footer">
+            &copy; 2026 GoldTracker | Real-time Market Surveillance
+        </div>
+    </div>
+</body>
+</html>

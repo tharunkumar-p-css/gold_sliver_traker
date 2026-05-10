@@ -13,8 +13,8 @@ from django.utils import timezone
 from core.forms import RegisterForm, LoginForm, ProfileForm, AlertForm
 from core.models import UserAlert
 from rates.services import get_latest_rate
-from notifications.email_service import send_welcome_email
-from notifications.telegram_service import send_welcome_telegram
+from notifications.email_service import send_welcome_email, send_login_email
+from notifications.telegram_service import send_welcome_telegram, send_login_telegram
 
 # ── Authentication ────────────────────────────────────────────────────────────
 
@@ -42,6 +42,11 @@ def login_view(request):
     if form.is_valid():
         user = form.get_user()
         login(request, user)
+        
+        # Dispatch Login Notifications
+        send_login_email(user)
+        send_login_telegram(user)
+        
         messages.success(request, f"Welcome back, {user.first_name or user.username}! 👋")
         return redirect(request.GET.get('next', 'dashboard'))
     return render(request, 'auth/login.html', {'form': form})

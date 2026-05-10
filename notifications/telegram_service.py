@@ -66,3 +66,29 @@ def send_welcome_telegram(user):
     except Exception as e:
         logger.error(f"❌ Telegram welcome failed for {user.username}: {e}")
         return False
+
+def send_login_telegram(user):
+    token = getattr(settings, 'TELEGRAM_BOT_TOKEN', '')
+    chat_id = getattr(user.profile, 'telegram_chat_id', '')
+
+    if not token or not chat_id:
+        return False
+
+    message = (
+        f"👋 *Welcome Back, {user.first_name or user.username}!* 🎉\n\n"
+        f"Successful login detected at *GoldTracker*.\n"
+        f"Prices are being monitored. Check your active alerts on the dashboard.\n\n"
+        f"🔗 [Open Dashboard](http://localhost:8000/dashboard/)"
+    )
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    try:
+        requests.post(url, json={
+            'chat_id': chat_id, 
+            'text': message, 
+            'parse_mode': 'Markdown'
+        })
+        logger.info(f"✅ Telegram login notification sent to {user.username}")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Telegram login notification failed for {user.username}: {e}")
+        return False
